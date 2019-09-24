@@ -1,0 +1,15 @@
+
+
+
+CHIP CS16B019PC8Bit {
+    IN in[8],load,inc,reset;
+    OUT out[8];
+
+    PARTS:
+    CS16B019Inc8(in=temp,out=temp1);
+    Mux8(a=temp,b=temp1,sel=inc,out=temp2);
+    Mux8(a=temp2,b=in,sel=load,out=temp3);
+    Mux8(a=temp3,b=false,sel=reset,out=temp4);
+    CS16B019Reg8Bit(in=temp4,load=true,out=temp,out=out);
+
+}

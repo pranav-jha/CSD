@@ -1,0 +1,18 @@
+
+
+CHIP CS16B019Reg8Bit {
+    IN in[8], load;
+    OUT out[8];
+
+    PARTS:
+    CS16B019Reg1Bit(in=in[0],load=load,out=out[0]);
+    CS16B019Reg1Bit(in=in[1],load=load,out=out[1]);
+    CS16B019Reg1Bit(in=in[2],load=load,out=out[2]);
+    CS16B019Reg1Bit(in=in[3],load=load,out=out[3]);
+    CS16B019Reg1Bit(in=in[4],load=load,out=out[4]);
+    CS16B019Reg1Bit(in=in[5],load=load,out=out[5]);
+    CS16B019Reg1Bit(in=in[6],load=load,out=out[6]);
+    CS16B019Reg1Bit(in=in[7],load=load,out=out[7]);
+
+}
+

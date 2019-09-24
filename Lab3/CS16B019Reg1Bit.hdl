@@ -1,0 +1,10 @@
+
+CHIP CS16B019Reg1Bit {
+    IN in, load;
+    OUT out;
+	
+    PARTS:
+    Mux(a=dffout, b=in, sel=load, out=muxout);
+	DFF(in=muxout, out=dffout);
+	Or(a=dffout, b=dffout, out=out);
+}

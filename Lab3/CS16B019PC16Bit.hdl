@@ -1,0 +1,15 @@
+
+
+
+CHIP CS16B019PC16Bit {
+    IN in[16],load,inc,reset;
+    OUT out[16];
+
+    PARTS:
+    Inc16(in=temp,out=temp1);
+    Mux16(a=temp,b=temp1,sel=inc,out=temp2);
+    Mux16(a=temp2,b=in,sel=load,out=temp3);
+    Mux16(a=temp3,b=false,sel=reset,out=temp4);
+    Register(in=temp4,load=true,out=temp,out=out);
+
+}

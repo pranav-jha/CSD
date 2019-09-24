@@ -1,0 +1,12 @@
+/*
+  CS16B019
+  FullAdder
+*/
+CHIP CS16B019FullAdder {
+    IN a, b, c;
+    OUT sum, carry;
+    PARTS:
+    CS16B019HalfAdder(a=a, b=b, sum=sab, carry=cab);
+    CS16B019HalfAdder(a=sab, b=c, sum=sum, carry=cabc);
+    Or(a=cabc, b=cab, out=carry);
+}
