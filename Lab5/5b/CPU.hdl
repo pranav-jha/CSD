@@ -1,0 +1,57 @@
+CHIP CPU {
+
+    IN  inM[16],         
+        instruction[16], 
+        reset;           
+
+    OUT outM[16],        
+        writeM,          
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    
+            Mux16(a=instruction,b=outputALU,sel=instruction[15],out=inA);
+            Not(in=instruction[15],out=ainstr);
+            Or(a=instruction[5],b=ainstr,out=ALoad);
+            ARegister(in=inA,load=ALoad,out=Aout,out[0..14]=addressM);
+            
+            
+            And(a=instruction[15],b=instruction[4],out=DLoad);
+            DRegister(in=outputALU,load=DLoad,out=Dout);
+            
+            
+            And(a=instruction[15],b=instruction[3],out=writeM);
+            
+            //ALU output
+            Mux16(a=Aout,b=inM,sel=instruction[12],out=AMin);
+            ALU(x=Dout,y=AMin,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],
+                f=instruction[7],no=instruction[6],out=outputALU,out=outM,zr=zero,ng=neg);
+            
+            And(a=instruction[15],b=instruction[2],out=j1);
+            And(a=instruction[15],b=instruction[1],out=j2);
+            And(a=instruction[15],b=instruction[0],out=j3);
+            
+            
+            DMux8Way(in=true,sel[2]=j1,sel[1]=j2,sel[0]=j3,a=nj,b=gt,c=eq,d=ge,e=lt,f=ne,g=le,h=jmp);
+
+            Not(in=nj,out=nnj);
+            Not(in=neg,out=nneg);
+            Not(in=zero,out=nzero);
+            And(a=nzero,b=nneg,out=nzn);
+            Or(a=zero,b=neg,out=zn);
+            
+            And(a=gt,b=nzn,out=temp1);
+            And(a=eq,b=zero,out=temp2);
+            And(a=ge,b=nneg,out=temp3);
+            And(a=lt,b=neg,out=temp4);
+            And(a=ne,b=nzero,out=temp5);
+            And(a=le,b=zn,out=temp6);
+            
+            Or8Way(in[0]=temp1,in[1]=temp2,in[2]=temp3,in[3]=temp4,in[4]=temp5,in[5]=temp6,in[6]=jmp,in[7]=false,out=temp0);
+            And(a=temp0,b=nnj,out=jumpload);
+        
+            //Set PC register    
+            PC(in=Aout,load=jumpload,inc=true,reset=reset,out[0..14]=pc);
+    
+}

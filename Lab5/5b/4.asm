@@ -1,0 +1,27 @@
+   @12
+   D=A
+   @END
+   D;JLE 
+   @count
+   M=D
+   @SCREEN
+   D=A
+   @addr
+   M=D
+(L)
+   @addr
+   A=M
+   M=-1
+   @addr
+   D=M
+   @32
+   D=D+A
+   @addr
+   M=D
+   @count
+   MD=M-1
+   @L
+   D;JGT
+(END)
+   @END
+   0;JMP

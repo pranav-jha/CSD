@@ -1,0 +1,53 @@
+CHIP CPU {
+
+    IN  inM[16],         
+        instruction[16], 
+        reset;           
+                         
+    OUT outM[16],       
+        writeM,          
+        addressM[15],    
+        pc[15];         
+
+    PARTS:
+  
+    Mux16(a=instruction,b=outputALU,sel=instruction[15],out=Ain);
+    Not(in=instruction[15],out=strAin);
+    Or(a=instruction[5],b=strAin,out=ALoad);
+    ARegister(in=Ain,load=ALoad,out=Aout,out[0..14]=addressM);
+    And(a=instruction[15],b=instruction[4],out=DLoad);
+    DRegister(in=outputALU,load=DLoad,out=Dout);
+    
+   
+    And(a=instruction[15],b=instruction[3],out=writeM);
+    Mux16(a=Aout,b=inM,sel=instruction[12],out=AMin);
+    ALU(x=Dout,y=AMin,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],
+    	f=instruction[7],no=instruction[6],out=outputALU,out=outM,zr=zero,ng=neg);
+    
+    And(a=instruction[15],b=instruction[2],out=ja);
+    And(a=instruction[15],b=instruction[1],out=jb);
+    And(a=instruction[15],b=instruction[0],out=jc);
+    
+    
+    DMux8Way(in=true,sel[2]=ja,sel[1]=jb,sel[0]=jc,a=nj,b=gt,c=eq,d=ge,e=lt,f=ne,g=le,h=jmp);
+
+	Not(in=nj,out=nnj);
+    Not(in=neg,out=nneg);
+    Not(in=zero,out=nzero);
+    And(a=nzero,b=nneg,out=nzn);
+    Or(a=zero,b=neg,out=zn);
+    
+    And(a=gt,b=nzn,out=klm1);
+    And(a=eq,b=zero,out=klm2);
+    And(a=ge,b=nneg,out=klm3);
+    And(a=lt,b=neg,out=klm4);
+    And(a=ne,b=nzero,out=klm5);
+    And(a=le,b=zn,out=klm6);
+    
+    Or8Way(in[0]=klm1,in[1]=klm2,in[2]=klm3,in[3]=klm4,in[4]=klm5,in[5]=klm6,in[6]=jmp,in[7]=false,out=klm0);
+    And(a=klm0,b=nnj,out=jumpload);
+ 
+	  
+    PC(in=Aout,load=jumpload,inc=true,reset=reset,out[0..14]=pc);
+    
+}
