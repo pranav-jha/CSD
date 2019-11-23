@@ -1,0 +1,10 @@
+CS16B019-CS16B020
+
+Pranav Jha - Pratik Agrawalla
+
+To run 
+
+open terminal 
+type "python3 lab8.py lab8.jack"
+
+it will return lab8.vm, lab8.jack, lab8 asm
