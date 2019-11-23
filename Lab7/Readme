@@ -7,4 +7,4 @@ Written in python3
 To run
 type "python3 cs16b019_20_vm.py test.vm"
 
-Output will be on terminal
+Output will be test.asm
