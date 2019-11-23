@@ -7,4 +7,4 @@ To run
 open terminal 
 type "python3 lab8.py lab8.jack"
 
-it will return lab8.vm, lab8.jack, lab8 asm
+it will return lab8.vm, lab8.hack, lab8.asm
